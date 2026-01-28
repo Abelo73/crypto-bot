@@ -42,6 +42,8 @@ class OrderServiceTest {
     private ExchangeAdapter exchangeAdapter;
     @Mock
     private SymbolDetailsService symbolDetailsService;
+    @Mock
+    private CopyTradingService copyTradingService;
 
     @InjectMocks
     private OrderService orderService;

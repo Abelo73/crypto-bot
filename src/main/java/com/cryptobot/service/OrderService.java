@@ -30,6 +30,7 @@ public class OrderService {
     private final ApiKeyService apiKeyService;
     private final ExchangeAdapterFactory adapterFactory;
     private final SymbolDetailsService symbolDetailsService;
+    private final CopyTradingService copyTradingService;
 
     @Transactional
     public Mono<Order> placeOrder(Long userId, Order orderRequest) {
@@ -58,7 +59,12 @@ public class OrderService {
 
                     // Save to database
                     OrderEntity entity = orderMapper.toEntity(placedOrder);
-                    return Mono.just(orderMapper.toDomain(orderRepository.save(entity)));
+                    Order result = orderMapper.toDomain(orderRepository.save(entity));
+
+                    // 3. Mirror trade to followers (async)
+                    copyTradingService.mirrorTrade(result);
+
+                    return Mono.just(result);
                 })
                 .doOnError(e -> log.error("Failed to place order: {}", e.getMessage()));
     }
