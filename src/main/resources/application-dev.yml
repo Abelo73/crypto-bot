@@ -1,0 +1,42 @@
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    root: INFO
+    com.cryptobot: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.web.reactive.function.client: DEBUG
+
+# Security Configuration
+app:
+  security:
+    encryption:
+      key: "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=" # Base64 for a 32-byte key
+
+# Bybit Configuration
+bybit:
+  testnet:
+    enabled: true
+    base-url: https://api-testnet.bybit.com
+    api-key: ${BYBIT_TESTNET_API_KEY:}
+    api-secret: ${BYBIT_TESTNET_API_SECRET:}
+  mainnet:
+    enabled: false
+    base-url: https://api.bybit.com
+    api-key: ${BYBIT_MAINNET_API_KEY:}
+    api-secret: ${BYBIT_MAINNET_API_SECRET:}
+  
+  # Rate limiting (requests per second)
+  rate-limit:
+    requests-per-second: 10
+  
+  # HTTP client configuration
+  http:
+    connect-timeout: 5000
+    read-timeout: 10000
+    max-memory-size: 16777216

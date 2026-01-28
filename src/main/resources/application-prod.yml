@@ -1,0 +1,31 @@
+spring:
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+logging:
+  level:
+    root: WARN
+    com.cryptobot: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
+
+# Bybit Configuration
+bybit:
+  testnet:
+    enabled: false
+  mainnet:
+    enabled: true
+    base-url: https://api.bybit.com
+    api-key: ${BYBIT_MAINNET_API_KEY}
+    api-secret: ${BYBIT_MAINNET_API_SECRET}
+  
+  rate-limit:
+    requests-per-second: 10
+  
+  http:
+    connect-timeout: 5000
+    read-timeout: 10000
+    max-memory-size: 16777216

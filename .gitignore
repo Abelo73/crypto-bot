@@ -1,0 +1,42 @@
+# Compiled class files
+*.class
+target/
+*.jar
+*.war
+*.ear
+
+# Log files
+*.log
+logs/
+
+# IDE files
+.idea/
+*.iml
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+application-local.yml
+application-secrets.yml
+
+# Test coverage
+coverage/
+*.exec
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Spring Boot
+HELP.md
