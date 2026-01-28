@@ -60,6 +60,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- JSON and Advanced JPA Types -->
+        <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-63</artifactId>
+            <version>3.7.0</version>
+        </dependency>
+
         <!-- Database Migration -->
         <dependency>
             <groupId>org.flywaydb</groupId>

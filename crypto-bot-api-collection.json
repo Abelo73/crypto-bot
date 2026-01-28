@@ -108,28 +108,6 @@
                         }
                     },
                     "response": []
-                },
-                {
-                    "name": "Validate API Key",
-                    "request": {
-                        "method": "POST",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/api/users/{{userId}}/api-keys/{{apiKeyId}}/validate",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "api",
-                                "users",
-                                "{{userId}}",
-                                "api-keys",
-                                "{{apiKeyId}}",
-                                "validate"
-                            ]
-                        }
-                    },
-                    "response": []
                 }
             ]
         },
@@ -152,35 +130,7 @@
                                 "{{userId}}",
                                 "balances"
                             ]
-                        },
-                        "description": "Returns all cached balances for the user across all API keys."
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Get Balances for Specific Key",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/api/users/{{userId}}/balances?apiKeyId=1",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "api",
-                                "users",
-                                "{{userId}}",
-                                "balances"
-                            ],
-                            "query": [
-                                {
-                                    "key": "apiKeyId",
-                                    "value": "1"
-                                }
-                            ]
-                        },
-                        "description": "Returns cached balances filtered by a specific API key ID."
+                        }
                     },
                     "response": []
                 },
@@ -205,6 +155,116 @@
                                 {
                                     "key": "exchangeType",
                                     "value": "BYBIT"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Automated Strategies",
+            "item": [
+                {
+                    "name": "Create DCA Strategy",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"BTC Accumulation\",\n    \"apiKeyId\": 1,\n    \"type\": \"DCA\",\n    \"symbol\": \"BTCUSDT\",\n    \"parameters\": {\n        \"amountUsdt\": 10,\n        \"intervalMinutes\": 1440\n    }\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/{{userId}}/strategies",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "{{userId}}",
+                                "strategies"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "List Strategies",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/{{userId}}/strategies",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "{{userId}}",
+                                "strategies"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Activate Strategy",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/{{userId}}/strategies/1/status?status=ACTIVE",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "{{userId}}",
+                                "strategies",
+                                "1",
+                                "status"
+                            ],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "ACTIVE"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Pause Strategy",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/{{userId}}/strategies/1/status?status=PAUSED",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "{{userId}}",
+                                "strategies",
+                                "1",
+                                "status"
+                            ],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "PAUSED"
                                 }
                             ]
                         }
@@ -240,77 +300,6 @@
                                 "users",
                                 "{{userId}}",
                                 "orders"
-                            ]
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Place MARKET Order",
-                    "request": {
-                        "method": "POST",
-                        "header": [],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n    \"exchangeType\": \"BYBIT\",\n    \"symbol\": \"BTCUSDT\",\n    \"side\": \"SELL\",\n    \"orderType\": \"MARKET\",\n    \"quantity\": 0.001\n}",
-                            "options": {
-                                "raw": {
-                                    "language": "json"
-                                }
-                            }
-                        },
-                        "url": {
-                            "raw": "{{baseUrl}}/api/users/{{userId}}/orders",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "api",
-                                "users",
-                                "{{userId}}",
-                                "orders"
-                            ]
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Get Order Status",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/api/users/{{userId}}/orders/{{orderId}}",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "api",
-                                "users",
-                                "{{userId}}",
-                                "orders",
-                                "{{orderId}}"
-                            ]
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Cancel Order",
-                    "request": {
-                        "method": "DELETE",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/api/users/{{userId}}/orders/{{orderId}}",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "api",
-                                "users",
-                                "{{userId}}",
-                                "orders",
-                                "{{orderId}}"
                             ]
                         }
                     },
@@ -356,63 +345,6 @@
                                 "market",
                                 "price",
                                 "BTCUSDT"
-                            ]
-                        },
-                        "description": "Returns the latest price for a symbol from the real-time WebSocket cache. If price hasn't arrived yet, returns 404."
-                    },
-                    "response": []
-                }
-            ]
-        },
-        {
-            "name": "Trade History",
-            "item": [
-                {
-                    "name": "Sync Trades from Exchange",
-                    "request": {
-                        "method": "POST",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/api/users/{{userId}}/trades/sync?exchangeType=BYBIT&symbol=BTCUSDT",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "api",
-                                "users",
-                                "{{userId}}",
-                                "trades",
-                                "sync"
-                            ],
-                            "query": [
-                                {
-                                    "key": "exchangeType",
-                                    "value": "BYBIT"
-                                },
-                                {
-                                    "key": "symbol",
-                                    "value": "BTCUSDT"
-                                }
-                            ]
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "Get Trade History",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/api/users/{{userId}}/trades",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "api",
-                                "users",
-                                "{{userId}}",
-                                "trades"
                             ]
                         }
                     },
