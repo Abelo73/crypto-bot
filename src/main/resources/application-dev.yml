@@ -40,3 +40,12 @@ bybit:
     connect-timeout: 5000
     read-timeout: 10000
     max-memory-size: 16777216
+
+  # WebSocket configuration
+  websocket:
+    base-url: ${BYBIT_WS_URL:wss://stream-testnet.bybit.com/v5/public/spot}
+    topics:
+      - ticker.BTCUSDT
+      - ticker.ETHUSDT
+    ping-interval-ms: 20000
+    reconnect-delay-ms: 5000

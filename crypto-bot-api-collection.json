@@ -339,6 +339,32 @@
             ]
         },
         {
+            "name": "Market Data (Real-time)",
+            "item": [
+                {
+                    "name": "Get Latest Price (WS Cache)",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/market/price/BTCUSDT",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "market",
+                                "price",
+                                "BTCUSDT"
+                            ]
+                        },
+                        "description": "Returns the latest price for a symbol from the real-time WebSocket cache. If price hasn't arrived yet, returns 404."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
             "name": "Trade History",
             "item": [
                 {
