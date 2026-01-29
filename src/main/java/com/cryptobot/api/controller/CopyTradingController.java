@@ -1,7 +1,6 @@
 package com.cryptobot.api.controller;
 
 import com.cryptobot.domain.model.CopyRelation;
-import com.cryptobot.domain.model.CopyTradingStatus;
 import com.cryptobot.service.CopyTradingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

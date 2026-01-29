@@ -30,6 +30,9 @@ bybit:
     base-url: https://api.bybit.com
     api-key: ${BYBIT_MAINNET_API_KEY:}
     api-secret: ${BYBIT_MAINNET_API_SECRET:}
+
+    API_KEY: Q8jYSqFEZMBdAaVKGn
+    API_SECRET: cM5dPJ5egEDnnMosmzjmzNRpqwVSaNAGfRd3
   
   # Rate limiting (requests per second)
   rate-limit:

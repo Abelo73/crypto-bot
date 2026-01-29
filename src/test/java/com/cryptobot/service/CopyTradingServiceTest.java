@@ -25,73 +25,73 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CopyTradingServiceTest {
 
-    @Mock
-    private CopyRelationRepository copyRelationRepository;
-    @Mock
-    private CopyRelationMapper copyRelationMapper;
-    @Mock
-    private OrderService orderService;
+        @Mock
+        private CopyRelationRepository copyRelationRepository;
+        @Mock
+        private CopyRelationMapper copyRelationMapper;
+        @Mock
+        private OrderService orderService;
 
-    @InjectMocks
-    private CopyTradingService copyTradingService;
+        @InjectMocks
+        private CopyTradingService copyTradingService;
 
-    private Long leadUserId = 1L;
-    private Long followerUserId = 2L;
-    private Order leadOrder;
+        private Long leadUserId = 1L;
+        private Long followerUserId = 2L;
+        private Order leadOrder;
 
-    @BeforeEach
-    void setUp() {
-        leadOrder = Order.builder()
-                .userId(leadUserId)
-                .symbol(new Symbol("BTCUSDT"))
-                .side(OrderSide.BUY)
-                .orderType(OrderType.MARKET)
-                .quantity(new BigDecimal("1.0"))
-                .build();
-    }
+        @BeforeEach
+        void setUp() {
+                leadOrder = Order.builder()
+                                .userId(leadUserId)
+                                .symbol("BTCUSDT")
+                                .side(OrderSide.BUY)
+                                .orderType(OrderType.MARKET)
+                                .quantity(new BigDecimal("1.0"))
+                                .build();
+        }
 
-    @Test
-    void testMirrorTradeGeneratesScaledOrders() {
-        // Arrange
-        CopyRelationEntity entity = new CopyRelationEntity();
-        entity.setFollowerUserId(followerUserId);
-        entity.setLeadUserId(leadUserId);
-        entity.setScaleFactor(new BigDecimal("0.5"));
-        entity.setStatus(CopyTradingStatus.ACTIVE);
+        @Test
+        void testMirrorTradeGeneratesScaledOrders() {
+                // Arrange
+                CopyRelationEntity entity = new CopyRelationEntity();
+                entity.setFollowerUserId(followerUserId);
+                entity.setLeadUserId(leadUserId);
+                entity.setScaleFactor(new BigDecimal("0.5"));
+                entity.setStatus(CopyTradingStatus.ACTIVE);
 
-        CopyRelation domain = CopyRelation.builder()
-                .followerUserId(followerUserId)
-                .leadUserId(leadUserId)
-                .scaleFactor(new BigDecimal("0.5"))
-                .status(CopyTradingStatus.ACTIVE)
-                .build();
+                CopyRelation domain = CopyRelation.builder()
+                                .followerUserId(followerUserId)
+                                .leadUserId(leadUserId)
+                                .scaleFactor(new BigDecimal("0.5"))
+                                .status(CopyTradingStatus.ACTIVE)
+                                .build();
 
-        when(copyRelationRepository.findByLeadUserIdAndStatus(leadUserId, CopyTradingStatus.ACTIVE))
-                .thenReturn(List.of(entity));
-        when(copyRelationMapper.toDomain(entity)).thenReturn(domain);
+                when(copyRelationRepository.findByLeadUserIdAndStatus(leadUserId, CopyTradingStatus.ACTIVE))
+                                .thenReturn(List.of(entity));
+                when(copyRelationMapper.toDomain(entity)).thenReturn(domain);
 
-        when(orderService.placeOrder(eq(followerUserId), any(Order.class)))
-                .thenReturn(Mono.just(Order.builder().userId(followerUserId).build()));
+                when(orderService.placeOrder(eq(followerUserId), any(Order.class)))
+                                .thenReturn(Mono.just(Order.builder().userId(followerUserId).build()));
 
-        // Act
-        copyTradingService.mirrorTrade(leadOrder);
+                // Act
+                copyTradingService.mirrorTrade(leadOrder);
 
-        // Assert
-        verify(orderService).placeOrder(eq(followerUserId),
-                argThat(order -> order.getQuantity().compareTo(new BigDecimal("0.5")) == 0 &&
-                        order.getSymbol().getValue().equals("BTCUSDT")));
-    }
+                // Assert
+                verify(orderService).placeOrder(eq(followerUserId),
+                                argThat(order -> order.getQuantity().compareTo(new BigDecimal("0.5")) == 0 &&
+                                                order.getSymbol().equals(new Symbol("BTCUSDT"))));
+        }
 
-    @Test
-    void testMirrorTradeNoFollowers() {
-        // Arrange
-        when(copyRelationRepository.findByLeadUserIdAndStatus(leadUserId, CopyTradingStatus.ACTIVE))
-                .thenReturn(List.of());
+        @Test
+        void testMirrorTradeNoFollowers() {
+                // Arrange
+                when(copyRelationRepository.findByLeadUserIdAndStatus(leadUserId, CopyTradingStatus.ACTIVE))
+                                .thenReturn(List.of());
 
-        // Act
-        copyTradingService.mirrorTrade(leadOrder);
+                // Act
+                copyTradingService.mirrorTrade(leadOrder);
 
-        // Assert
-        verifyNoInteractions(orderService);
-    }
+                // Assert
+                verifyNoInteractions(orderService);
+        }
 }

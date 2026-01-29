@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import org.springframework.web.reactive.socket.client.WebSocketClient;
 import reactor.core.publisher.Flux;
@@ -35,12 +36,15 @@ class MarketDataServiceTest {
     @Mock
     private WebSocketSession webSocketSession;
 
+    @Mock
+    private WebClient.Builder webClientBuilder;
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
-        marketDataService = new MarketDataService(objectMapper, webSocketClient);
-        ReflectionTestUtils.setField(marketDataService, "baseUrl", "ws://localhost:8080");
+        marketDataService = new MarketDataService(objectMapper, webSocketClient, webClientBuilder);
+        ReflectionTestUtils.setField(marketDataService, "wsUrl", "ws://localhost:8080");
         ReflectionTestUtils.setField(marketDataService, "topics", List.of("ticker.BTCUSDT"));
     }
 

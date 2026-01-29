@@ -30,7 +30,7 @@ public class OrderController {
 
         Order orderRequest = Order.builder()
                 .exchangeType(request.getExchangeType())
-                .symbol(new Symbol(request.getSymbol()))
+                .symbol(request.getSymbol())
                 .orderType(request.getOrderType())
                 .side(request.getSide())
                 .quantity(request.getQuantity())

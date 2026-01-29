@@ -1,35 +1,53 @@
 # 🎨 Frontend Roadmap: Premium Dashboard UI
 
-This document tracks the granular development tasks for the `crypto-bot` React dashboard.
+This document tracks the granular development tasks for the `crypto-bot` React dashboard, mapped to backend APIs.
 
-## Phase A: Project Foundations
-- [ ] Bootstrap Vite + React + TypeScript
-- [ ] Tailwind Neon/Glass Design Tokens configuration
-- [ ] Global Glassmorphism Layout Shell (Sidebar/Navbar)
-- [ ] API layer configuration (Axios + React Query)
+## Phase A: Project Foundations [IN PROGRESS]
+- [x] Bootstrap Vite + React + TypeScript
+- [x] Configure Tailwind CSS v4 + Shadcn UI
+- [ ] **Global Glassmorphism Layout Shell**
+    - Implementation: Sidebar for navigation, Top Navbar for user/balance overview.
+    - Technical: Use `framer-motion` for smooth transitions.
 
-## Phase B: Real-time Data Layer
-- [ ] Persistent WebSocket hook (`usePriceStream`)
-- [ ] Global state management for Portfolio/Ticker (Zustand)
+## Phase B: Real-time Data Layer [IN PROGRESS]
+- [x] **API Layer Setup (Axios + TanStack Query)**
+    - Config: Base URL `http://localhost:8080/api`.
+    - Note: Implement interceptors for default `userId: 1` (dev mode).
+- [x] **WebSocket/Polling Hook (`usePriceStream`)**
+    - Backend: `GET /api/market/price/{symbol}`.
+    - Technical: Poll the price endpoint or set up a dedicated WS connection if supported.
 
-## Phase C: Unified Dashboard (Command Center)
-- [ ] Multi-exchange Portfolio Card (Aggregate visualizer)
-- [ ] Real-time PnL Sparklines (Recharts integration)
-- [ ] Global Price Ticker Scroll (Neon effect)
-- [ ] Recent Activity Notification center
+## Phase C: Unified Dashboard (Command Center) [IN PROGRESS]
+- [x] **Multi-exchange Portfolio Card**
+    - Backend: `GET /api/users/{userId}/balances`.
+    - Implementation: Pie chart for asset distribution (Recharts).
+- [x] **Global Price Ticker Scroll**
+    - Backend: `GET /api/market/price/{symbol}`.
+    - UI: Sliding neon ticker for BTC/USDT, ETH/USDT, etc.
 
 ## Phase D: Strategy Hub (Automated Bots)
-- [ ] Strategy Status Cards (Visual monitor for bots)
-- [ ] DCA Configuration Wizard (Multi-step form)
-- [ ] Dynamic Bot Toggle & Parameter updater
-- [ ] Bot-specific Performance breakdowns
+- [ ] **Strategy Status Cards**
+    - Backend: `GET /api/users/{userId}/strategies`.
+    - Logic: Display PnL, Status (ACTIVE/PAUSED), and Type.
+- [ ] **DCA Configuration Wizard**
+    - Backend: `POST /api/users/{userId}/strategies`.
+    - UI: Multi-step form using Shadcn components.
+- [ ] **Bot Control Center**
+    - Backend: `PATCH /api/users/{userId}/strategies/{strategyId}/status`.
+    - Logic: Toggle switch to start/stop bots.
 
 ## Phase E: Social Hub (Copy Trading)
-- [ ] Leaderboard / Trader Discovery view
-- [ ] Relationship Manager (Link/Unlink followers)
-- [ ] Real-time Scaling Slider (Proportional weight control)
+- [ ] **Follow Leaderboard**
+    - Backend: `POST /api/users/{userId}/copy-trading/follow`.
+    - Implementation: Search for traders and set scaling factor (1.0x, 2.0x, etc.).
 
 ## Phase F: Pro Trading Terminal
-- [ ] Lightning-fast Market/Limit order widgets
-- [ ] Interactive Order History table (Filtered/Searchable)
-- [ ] Exchange Live Balance indicator
+- [ ] **Lightning Order Widgets**
+    - Backend: `POST /api/users/{userId}/orders`.
+    - Support: MARKET and LIMIT orders.
+- [ ] **Interactive Trade History**
+    - Backend: `GET /api/users/{userId}/trades` (Executed) & `GET /api/users/{userId}/orders` (Open/Cancelled).
+    - UI: Filterable data table with status badges.
+- [ ] **API Key Manager**
+    - Backend: `POST /api/users/{userId}/api-keys` & `GET /api/users/{userId}/api-keys`.
+    - UI: Secure input modal and list of connected exchanges.

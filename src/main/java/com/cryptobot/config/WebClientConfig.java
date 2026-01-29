@@ -19,7 +19,7 @@ import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClien
 import org.springframework.web.reactive.socket.client.WebSocketClient;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
-import reactor.netty.tcp.SslProvider;
+import reactor.netty.resources.ConnectionProvider;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
@@ -52,15 +52,16 @@ public class WebClientConfig {
         return HttpClient.create(provider)
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 30000)
                 .responseTimeout(Duration.ofSeconds(30))
-                .secure(sslContextSpec -> sslContextSpec.sslContext(SslContextBuilder.forClient()))
+                .secure(sslContextSpec -> sslContextSpec
+                        .sslContext(SslContextBuilder.forClient()))
                 .doOnConnected(conn -> conn
                         .addHandlerLast(new ReadTimeoutHandler(30, TimeUnit.SECONDS))
                         .addHandlerLast(new WriteTimeoutHandler(30, TimeUnit.SECONDS)));
     }
 
     @Bean
-    public WebSocketClient webSocketClient() {
-        return new ReactorNettyWebSocketClient();
+    public WebSocketClient webSocketClient(HttpClient httpClient) {
+        return new ReactorNettyWebSocketClient(httpClient);
     }
 
     @Bean

@@ -38,7 +38,7 @@ public class DcaStrategy implements TradingStrategy {
 
         return Optional.of(Order.builder()
                 .exchangeType(strategy.getApiKeyId() != null ? null : null) // Will be filled by executor
-                .symbol(new Symbol(strategy.getSymbol()))
+                .symbol(strategy.getSymbol())
                 .side(OrderSide.BUY)
                 .orderType(OrderType.MARKET)
                 .quantity(quantity)

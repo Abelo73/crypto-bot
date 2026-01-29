@@ -23,7 +23,7 @@ public class Order {
     private Long apiKeyId;
     private ExchangeType exchangeType;
     private String exchangeOrderId;
-    private Symbol symbol;
+    private String symbol;
     private OrderType orderType;
     private OrderSide side;
     private BigDecimal quantity;

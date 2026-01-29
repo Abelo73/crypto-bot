@@ -11,6 +11,7 @@ import com.cryptobot.repository.entity.OrderEntity;
 import com.cryptobot.service.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
@@ -23,7 +24,6 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
@@ -31,6 +31,21 @@ public class OrderService {
     private final ExchangeAdapterFactory adapterFactory;
     private final SymbolDetailsService symbolDetailsService;
     private final CopyTradingService copyTradingService;
+
+    public OrderService(
+            OrderRepository orderRepository,
+            OrderMapper orderMapper,
+            ApiKeyService apiKeyService,
+            ExchangeAdapterFactory adapterFactory,
+            SymbolDetailsService symbolDetailsService,
+            @Lazy CopyTradingService copyTradingService) {
+        this.orderRepository = orderRepository;
+        this.orderMapper = orderMapper;
+        this.apiKeyService = apiKeyService;
+        this.adapterFactory = adapterFactory;
+        this.symbolDetailsService = symbolDetailsService;
+        this.copyTradingService = copyTradingService;
+    }
 
     @Transactional
     public Mono<Order> placeOrder(Long userId, Order orderRequest) {
@@ -40,7 +55,7 @@ public class OrderService {
 
         // 1. Validate against symbol details
         SymbolDetails details = symbolDetailsService.getDetails(orderRequest.getExchangeType(),
-                orderRequest.getSymbol().getValue());
+                orderRequest.getSymbol());
 
         if (details != null) {
             validateAndNormalizeOrder(orderRequest, details);

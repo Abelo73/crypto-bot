@@ -30,76 +30,76 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
 
-    @Mock
-    private OrderRepository orderRepository;
-    @Mock
-    private OrderMapper orderMapper;
-    @Mock
-    private ApiKeyService apiKeyService;
-    @Mock
-    private ExchangeAdapterFactory adapterFactory;
-    @Mock
-    private ExchangeAdapter exchangeAdapter;
-    @Mock
-    private SymbolDetailsService symbolDetailsService;
-    @Mock
-    private CopyTradingService copyTradingService;
+        @Mock
+        private OrderRepository orderRepository;
+        @Mock
+        private OrderMapper orderMapper;
+        @Mock
+        private ApiKeyService apiKeyService;
+        @Mock
+        private ExchangeAdapterFactory adapterFactory;
+        @Mock
+        private ExchangeAdapter exchangeAdapter;
+        @Mock
+        private SymbolDetailsService symbolDetailsService;
+        @Mock
+        private CopyTradingService copyTradingService;
 
-    @InjectMocks
-    private OrderService orderService;
+        @InjectMocks
+        private OrderService orderService;
 
-    private Long userId = 1L;
-    private Order orderRequest;
-    private ApiKey apiKey;
+        private Long userId = 1L;
+        private Order orderRequest;
+        private ApiKey apiKey;
 
-    @BeforeEach
-    void setUp() {
-        orderRequest = Order.builder()
-                .exchangeType(ExchangeType.BYBIT)
-                .symbol(new Symbol("BTCUSDT"))
-                .orderType(OrderType.LIMIT)
-                .side(OrderSide.BUY)
-                .quantity(new BigDecimal("0.001"))
-                .price(new BigDecimal("40000"))
-                .build();
+        @BeforeEach
+        void setUp() {
+                orderRequest = Order.builder()
+                                .exchangeType(ExchangeType.BYBIT)
+                                .symbol("BTCUSDT")
+                                .orderType(OrderType.LIMIT)
+                                .side(OrderSide.BUY)
+                                .quantity(new BigDecimal("0.001"))
+                                .price(new BigDecimal("40000"))
+                                .build();
 
-        apiKey = ApiKey.builder()
-                .id(100L)
-                .userId(userId)
-                .exchangeType(ExchangeType.BYBIT)
-                .apiKeyEncrypted("encrypted-key")
-                .apiSecretEncrypted("encrypted-secret")
-                .active(true)
-                .build();
-    }
+                apiKey = ApiKey.builder()
+                                .id(100L)
+                                .userId(userId)
+                                .exchangeType(ExchangeType.BYBIT)
+                                .apiKeyEncrypted("encrypted-key")
+                                .apiSecretEncrypted("encrypted-secret")
+                                .active(true)
+                                .build();
+        }
 
-    @Test
-    void testPlaceOrderSuccess() {
-        // Arrange
-        when(apiKeyService.getActiveKey(userId, ExchangeType.BYBIT)).thenReturn(apiKey);
-        when(apiKeyService.getDecryptedCredentials(apiKey))
-                .thenReturn(new ApiKeyService.Credentials("plain-key", "plain-secret"));
-        when(adapterFactory.getAdapter(ExchangeType.BYBIT)).thenReturn(exchangeAdapter);
+        @Test
+        void testPlaceOrderSuccess() {
+                // Arrange
+                when(apiKeyService.getActiveKey(userId, ExchangeType.BYBIT)).thenReturn(apiKey);
+                when(apiKeyService.getDecryptedCredentials(apiKey))
+                                .thenReturn(new ApiKeyService.Credentials("plain-key", "plain-secret"));
+                when(adapterFactory.getAdapter(ExchangeType.BYBIT)).thenReturn(exchangeAdapter);
 
-        Order placedOrder = Order.builder()
-                .exchangeOrderId("order-123")
-                .status(OrderStatus.NEW)
-                .build();
+                Order placedOrder = Order.builder()
+                                .exchangeOrderId("order-123")
+                                .status(OrderStatus.NEW)
+                                .build();
 
-        when(exchangeAdapter.placeOrder(anyString(), anyString(), any(Order.class)))
-                .thenReturn(Mono.just(placedOrder));
+                when(exchangeAdapter.placeOrder(anyString(), anyString(), any(Order.class)))
+                                .thenReturn(Mono.just(placedOrder));
 
-        OrderEntity orderEntity = new OrderEntity();
-        when(orderMapper.toEntity(any(Order.class))).thenReturn(orderEntity);
-        when(orderRepository.save(any(OrderEntity.class))).thenReturn(orderEntity);
-        when(orderMapper.toDomain(any(OrderEntity.class))).thenReturn(placedOrder);
+                OrderEntity orderEntity = new OrderEntity();
+                when(orderMapper.toEntity(any(Order.class))).thenReturn(orderEntity);
+                when(orderRepository.save(any(OrderEntity.class))).thenReturn(orderEntity);
+                when(orderMapper.toDomain(any(OrderEntity.class))).thenReturn(placedOrder);
 
-        // Act & Assert
-        StepVerifier.create(orderService.placeOrder(userId, orderRequest))
-                .expectNextMatches(order -> "order-123".equals(order.getExchangeOrderId()))
-                .verifyComplete();
+                // Act & Assert
+                StepVerifier.create(orderService.placeOrder(userId, orderRequest))
+                                .expectNextMatches(order -> "order-123".equals(order.getExchangeOrderId()))
+                                .verifyComplete();
 
-        verify(apiKeyService).markAsUsed(apiKey.getId());
-        verify(orderRepository).save(any(OrderEntity.class));
-    }
+                verify(apiKeyService).markAsUsed(apiKey.getId());
+                verify(orderRepository).save(any(OrderEntity.class));
+        }
 }

@@ -21,15 +21,20 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class CopyTradingService {
 
     private final CopyRelationRepository copyRelationRepository;
     private final CopyRelationMapper copyRelationMapper;
-
-    // Inject OrderService lazily to avoid circular dependencies if it calls back
-    @Lazy
     private final OrderService orderService;
+
+    public CopyTradingService(
+            CopyRelationRepository copyRelationRepository,
+            CopyRelationMapper copyRelationMapper,
+            @Lazy OrderService orderService) {
+        this.copyRelationRepository = copyRelationRepository;
+        this.copyRelationMapper = copyRelationMapper;
+        this.orderService = orderService;
+    }
 
     /**
      * Mirror a lead trade to all active followers.

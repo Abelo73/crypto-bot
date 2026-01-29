@@ -5,20 +5,14 @@ import com.cryptobot.domain.vo.Symbol;
 import com.cryptobot.repository.entity.OrderEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface OrderMapper {
 
-    @Mapping(target = "symbol", source = "symbol", qualifiedByName = "toSymbol")
+    @Mapping(target = "symbol", source = "symbol")
     Order toDomain(OrderEntity entity);
 
-    @Mapping(target = "symbol", source = "symbol.value")
-    OrderEntity toEntity(Order domain);
-
-    @Named("toSymbol")
-    default Symbol toSymbol(String value) {
-        return value != null ? new Symbol(value) : null;
-    }
+    @Mapping(target = "userId", source = "userId")
+    OrderEntity toEntity(Order order);
 }
